@@ -53,192 +53,191 @@ static struct Command commands[] = {
 	/*
 	 *	avoid short commands different for the case only
 	 */
-	{ do_read_extcsd, -1,
-	  "extcsd read", "<device>\n"
-		"Print extcsd data from <device>.",
-	  NULL
-	},
-	{ do_writeprotect_boot_get, -1,
-	  "writeprotect boot get", "<device>\n"
-		"Print the boot partitions write protect status for <device>.",
-	  NULL
-	},
-	{ do_writeprotect_boot_set, -1,
-	  "writeprotect boot set",
+	{do_read_extcsd, -1,
+	 "extcsd read", "<device>\n"
+					"Print extcsd data from <device>.",
+	 NULL},
+	{do_writeprotect_boot_get, -1,
+	 "writeprotect boot get", "<device>\n"
+							  "Print the boot partitions write protect status for <device>.",
+	 NULL},
+	{do_PPEU, -1,
+	 "ppeu read", "<dump ctrl> <device>\n"
+				  "Usage: mmc ppeu read <-d> <device>\n"
+				  "-d\tdump data block",
+	 NULL},
+	{do_writeprotect_boot_set, -1,
+	 "writeprotect boot set",
 #ifdef DANGEROUS_COMMANDS_ENABLED
-		"[-p] "
+	 "[-p] "
 #endif /* DANGEROUS_COMMANDS_ENABLED */
-		"<device> [<number>]\n"
-		"Set the boot partition write protect status for <device>.\n"
-		"If <number> is passed (0 or 1), only protect that particular\n"
-		"eMMC boot partition, otherwise protect both. It will be\n"
-		"write-protected until the next boot.\n"
+	 "<device> [<number>]\n"
+	 "Set the boot partition write protect status for <device>.\n"
+	 "If <number> is passed (0 or 1), only protect that particular\n"
+	 "eMMC boot partition, otherwise protect both. It will be\n"
+	 "write-protected until the next boot.\n"
 #ifdef DANGEROUS_COMMANDS_ENABLED
-		"  -p  Protect partition permanently instead.\n"
-		"      NOTE! -p is a one-time programmable (unreversible) change.\n"
+	 "  -p  Protect partition permanently instead.\n"
+	 "      NOTE! -p is a one-time programmable (unreversible) change.\n"
 #endif /* DANGEROUS_COMMANDS_ENABLED */
-	  , NULL
-	},
-	{ do_writeprotect_user_set, -4,
-	  "writeprotect user set", "<type>" "<start block>" "<blocks>" "<device>\n"
+	 ,
+	 NULL},
+	{do_writeprotect_user_set, -4,
+	 "writeprotect user set", "<type>"
+							  "<start block>"
+							  "<blocks>"
+							  "<device>\n"
 #ifdef DANGEROUS_COMMANDS_ENABLED
-	  "Set the write protect configuration for the specified region\nof the user area for <device>.\n<type> must be \"none|temp|pwron|perm\".\n    \"none\"  - Clear temporary write protection.\n    \"temp\"  - Set temporary write protection.\n    \"pwron\" - Set write protection until the next poweron.\n    \"perm\"  - Set permanent write protection.\n<start block> specifies the first block of the protected area.\n<blocks> specifies the size of the protected area in blocks.\nNOTE! The area must start and end on Write Protect Group\nboundries, Use the \"writeprotect user get\" command to get the\nWrite Protect Group size.\nNOTE! \"perm\" is a one-time programmable (unreversible) change.",
+							  "Set the write protect configuration for the specified region\nof the user area for <device>.\n<type> must be \"none|temp|pwron|perm\".\n    \"none\"  - Clear temporary write protection.\n    \"temp\"  - Set temporary write protection.\n    \"pwron\" - Set write protection until the next poweron.\n    \"perm\"  - Set permanent write protection.\n<start block> specifies the first block of the protected area.\n<blocks> specifies the size of the protected area in blocks.\nNOTE! The area must start and end on Write Protect Group\nboundries, Use the \"writeprotect user get\" command to get the\nWrite Protect Group size.\nNOTE! \"perm\" is a one-time programmable (unreversible) change.",
 #else
-	  "Set the write protect configuration for the specified region\nof the user area for <device>.\n<type> must be \"none|temp|pwron\".\n    \"none\"  - Clear temporary write protection.\n    \"temp\"  - Set temporary write protection.\n    \"pwron\" - Set write protection until the next poweron.\n<start block> specifies the first block of the protected area.\n<blocks> specifies the size of the protected area in blocks.\nNOTE! The area must start and end on Write Protect Group\nboundries, Use the \"writeprotect user get\" command to get the\nWrite Protect Group size.",
+							  "Set the write protect configuration for the specified region\nof the user area for <device>.\n<type> must be \"none|temp|pwron\".\n    \"none\"  - Clear temporary write protection.\n    \"temp\"  - Set temporary write protection.\n    \"pwron\" - Set write protection until the next poweron.\n<start block> specifies the first block of the protected area.\n<blocks> specifies the size of the protected area in blocks.\nNOTE! The area must start and end on Write Protect Group\nboundries, Use the \"writeprotect user get\" command to get the\nWrite Protect Group size.",
 #endif /* DANGEROUS_COMMANDS_ENABLED */
-	  NULL
-	},
-	{ do_writeprotect_user_get, -1,
-	  "writeprotect user get", "<device>\n"
-		"Print the user areas write protect configuration for <device>.",
-	  NULL
-	},
-	{ do_disable_512B_emulation, -1,
-	  "disable 512B emulation", "<device>\n"
-		"Set the eMMC data sector size to 4KB by disabling emulation on\n<device>.",
-	  NULL
-	},
-	{ do_create_gp_partition, -6,
-	  "gp create", "<-y|-n|-c> " "<length KiB> " "<partition> " "<enh_attr> " "<ext_attr> " "<device>\n"
-		"Create general purpose partition for the <device>.\nDry-run only unless -y or -c is passed.\nUse -c if more partitioning settings are still to come.\nNOTE!  This is a one-time programmable (unreversible) change.\nTo set enhanced attribute to general partition being created set\n <enh_attr> to 1 else set it to 0.\nTo set extended attribute to general partition\n set <ext_attr> to 1,2 else set it to 0",
-	  NULL
-	},
-	{ do_enh_area_set, -4,
-	  "enh_area set", "<-y|-n|-c> " "<start KiB> " "<length KiB> " "<device>\n"
-		"Enable the enhanced user area for the <device>.\nDry-run only unless -y or -c is passed.\nUse -c if more partitioning settings are still to come.\nNOTE!  This is a one-time programmable (unreversible) change.",
-	  NULL
-	},
-	{ do_write_reliability_set, -2,
-	  "write_reliability set", "<-y|-n|-c> " "<partition> " "<device>\n"
-		"Enable write reliability per partition for the <device>.\nDry-run only unless -y or -c is passed.\nUse -c if more partitioning settings are still to come.\nNOTE!  This is a one-time programmable (unreversible) change.",
-	  NULL
-	},
-	{ do_status_get, -1,
-	  "status get", "<device>\n"
-	  "Print the response to STATUS_SEND (CMD13).",
-	  NULL
-	},
-	{ do_write_boot_en, -3,
-	  "bootpart enable", "<boot_partition> " "<send_ack> " "<device>\n"
-		"Enable the boot partition for the <device>.\nDisable the boot partition for the <device> if <boot_partition> is set to 0.\nTo receive acknowledgment of boot from the card set <send_ack>\nto 1, else set it to 0.",
-	  NULL
-	},
-	{ do_boot_bus_conditions_set, -4,
-	  "bootbus set", "<boot_mode> " "<reset_boot_bus_conditions> " "<boot_bus_width> " "<device>\n"
-	  "Set Boot Bus Conditions.\n"
-	  "<boot_mode> must be \"single_backward|single_hs|dual\"\n"
-	  "<reset_boot_bus_conditions> must be \"x1|retain\"\n"
-	  "<boot_bus_width> must be \"x1|x4|x8\"",
-	  NULL
-	},
-	{ do_write_bkops_en, -2,
-	  "bkops_en", "<auto|manual> <device>\n"
-		"Enable the eMMC BKOPS feature on <device>.\n"
-		"The auto (AUTO_EN) setting is only supported on eMMC 5.0 or newer.\n"
-		"Setting auto won't have any effect if manual is set.\n"
-		"NOTE!  Setting manual (MANUAL_EN) is one-time programmable (unreversible) change.",
-	  NULL
-	},
-	{ do_hwreset_en, -1,
-	  "hwreset enable", "<device>\n"
-		"Permanently enable the eMMC H/W Reset feature on <device>.\nNOTE!  This is a one-time programmable (unreversible) change.",
-	  NULL
-	},
-	{ do_hwreset_dis, -1,
-	  "hwreset disable", "<device>\n"
-		"Permanently disable the eMMC H/W Reset feature on <device>.\nNOTE!  This is a one-time programmable (unreversible) change.",
-	  NULL
-	},
-	{ do_sanitize, -1,
-	  "sanitize", "<device>\n"
-		"Send Sanitize command to the <device>.\nThis will delete the unmapped memory region of the device.",
-	  NULL
-	},
-	{ do_rpmb_write_key, -1,
-	  "rpmb write-key", "<rpmb device> <key file>\n"
-		  "Program authentication key which is 32 bytes length and stored\n"
-		  "in the specified file. Also you can specify '-' instead of\n"
-		  "key file path to read the key from stdin.\n"
-		  "NOTE!  This is a one-time programmable (unreversible) change.\n"
-		  "Example:\n"
-		  "  $ echo -n AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHH | \\\n"
-		  "    mmc rpmb write-key /dev/mmcblk0rpmb -",
-	  NULL
-	},
-	{ do_rpmb_read_counter, -1,
-	  "rpmb read-counter", "<rpmb device>\n"
-		  "Counter value for the <rpmb device> will be read to stdout.",
-	  NULL
-	},
-	{ do_rpmb_read_block, -1,
-	  "rpmb read-block", "<rpmb device> <address> <blocks count> <output file> [key file]\n"
-		  "Blocks of 256 bytes will be read from <rpmb device> to output\n"
-		  "file or stdout if '-' is specified. If key is specified - read\n"
-		  "data will be verified. Instead of regular path you can specify\n"
-		  "'-' to read key from stdin.\n"
-		  "Example:\n"
-		  "  $ echo -n AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHH | \\\n"
-		  "    mmc rpmb read-block /dev/mmcblk0rpmb 0x02 2 /tmp/block -\n"
-		  "or read two blocks without verification\n"
-		  "  $ mmc rpmb read-block /dev/mmcblk0rpmb 0x02 2 /tmp/block",
-	  NULL
-	},
-	{ do_rpmb_write_block, -1,
-	  "rpmb write-block", "<rpmb device> <address> <256 byte data file> <key file>\n"
-		  "Block of 256 bytes will be written from data file to\n"
-		  "<rpmb device>. Also you can specify '-' instead of key\n"
-		  "file path or data file to read the data from stdin.\n"
-		  "Example:\n"
-		  "  $ (awk 'BEGIN {while (c++<256) printf \"a\"}' | \\\n"
-		  "    echo -n AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHH) | \\\n"
-		  "    mmc rpmb write-block /dev/mmcblk0rpmb 0x02 - -",
-	  NULL
-	},
-	{ do_cache_en, -1,
-	  "cache enable", "<device>\n"
-		"Enable the eMMC cache feature on <device>.\n"
-		"NOTE! The cache is an optional feature on devices >= eMMC4.5.",
-	  NULL
-	},
-	{ do_cache_dis, -1,
-	  "cache disable", "<device>\n"
-		"Disable the eMMC cache feature on <device>.\n"
-		"NOTE! The cache is an optional feature on devices >= eMMC4.5.",
-	  NULL
-	},
-	{ do_read_csd, -1,
-	  "csd read", "<device path>\n"
-		  "Print CSD data from <device path>.\n"
-		  "The device path should specify the csd file directory.",
-	  NULL
-	},
-	{ do_read_cid, -1,
-	  "cid read", "<device path>\n"
-		  "Print CID data from <device path>.\n"
-		  "The device path should specify the cid file directory.",
-	  NULL
-	},
-	{ do_read_scr, -1,
-	  "scr read", "<device path>\n"
-		  "Print SCR data from <device path>.\n"
-		  "The device path should specify the scr file directory.",
-	  NULL
-	},
-	{ do_ffu, -2,
-	  "ffu", "<image name> <device>\n"
-		"Run Field Firmware Update with <image name> on <device>.\n",
-	  NULL
-	},
-	{ do_erase, -4,
-	"erase", "<type> " "<start address> " "<end address> " "<device>\n"
-		"Send Erase CMD38 with specific argument to the <device>\n\n"
-		"NOTE!: This will delete all user data in the specified region of the device\n"
-		"<type> must be: legacy | discard | secure-erase | "
-		"secure-trim1 | secure-trim2 | trim \n",
-	NULL
-	},
-	{ 0, 0, 0, 0 }
-};
+	 NULL},
+	{do_writeprotect_user_get, -1,
+	 "writeprotect user get", "<device>\n"
+							  "Print the user areas write protect configuration for <device>.",
+	 NULL},
+	{do_disable_512B_emulation, -1,
+	 "disable 512B emulation", "<device>\n"
+							   "Set the eMMC data sector size to 4KB by disabling emulation on\n<device>.",
+	 NULL},
+	{do_create_gp_partition, -6,
+	 "gp create", "<-y|-n|-c> "
+				  "<length KiB> "
+				  "<partition> "
+				  "<enh_attr> "
+				  "<ext_attr> "
+				  "<device>\n"
+				  "Create general purpose partition for the <device>.\nDry-run only unless -y or -c is passed.\nUse -c if more partitioning settings are still to come.\nNOTE!  This is a one-time programmable (unreversible) change.\nTo set enhanced attribute to general partition being created set\n <enh_attr> to 1 else set it to 0.\nTo set extended attribute to general partition\n set <ext_attr> to 1,2 else set it to 0",
+	 NULL},
+	{do_enh_area_set, -4,
+	 "enh_area set", "<-y|-n|-c> "
+					 "<start KiB> "
+					 "<length KiB> "
+					 "<device>\n"
+					 "Enable the enhanced user area for the <device>.\nDry-run only unless -y or -c is passed.\nUse -c if more partitioning settings are still to come.\nNOTE!  This is a one-time programmable (unreversible) change.",
+	 NULL},
+	{do_write_reliability_set, -2,
+	 "write_reliability set", "<-y|-n|-c> "
+							  "<partition> "
+							  "<device>\n"
+							  "Enable write reliability per partition for the <device>.\nDry-run only unless -y or -c is passed.\nUse -c if more partitioning settings are still to come.\nNOTE!  This is a one-time programmable (unreversible) change.",
+	 NULL},
+	{do_status_get, -1,
+	 "status get", "<device>\n"
+				   "Print the response to STATUS_SEND (CMD13).",
+	 NULL},
+	{do_write_boot_en, -3,
+	 "bootpart enable", "<boot_partition> "
+						"<send_ack> "
+						"<device>\n"
+						"Enable the boot partition for the <device>.\nDisable the boot partition for the <device> if <boot_partition> is set to 0.\nTo receive acknowledgment of boot from the card set <send_ack>\nto 1, else set it to 0.",
+	 NULL},
+	{do_boot_bus_conditions_set, -4,
+	 "bootbus set", "<boot_mode> "
+					"<reset_boot_bus_conditions> "
+					"<boot_bus_width> "
+					"<device>\n"
+					"Set Boot Bus Conditions.\n"
+					"<boot_mode> must be \"single_backward|single_hs|dual\"\n"
+					"<reset_boot_bus_conditions> must be \"x1|retain\"\n"
+					"<boot_bus_width> must be \"x1|x4|x8\"",
+	 NULL},
+	{do_write_bkops_en, -2,
+	 "bkops_en", "<auto|manual> <device>\n"
+				 "Enable the eMMC BKOPS feature on <device>.\n"
+				 "The auto (AUTO_EN) setting is only supported on eMMC 5.0 or newer.\n"
+				 "Setting auto won't have any effect if manual is set.\n"
+				 "NOTE!  Setting manual (MANUAL_EN) is one-time programmable (unreversible) change.",
+	 NULL},
+	{do_hwreset_en, -1,
+	 "hwreset enable", "<device>\n"
+					   "Permanently enable the eMMC H/W Reset feature on <device>.\nNOTE!  This is a one-time programmable (unreversible) change.",
+	 NULL},
+	{do_hwreset_dis, -1,
+	 "hwreset disable", "<device>\n"
+						"Permanently disable the eMMC H/W Reset feature on <device>.\nNOTE!  This is a one-time programmable (unreversible) change.",
+	 NULL},
+	{do_sanitize, -1,
+	 "sanitize", "<device>\n"
+				 "Send Sanitize command to the <device>.\nThis will delete the unmapped memory region of the device.",
+	 NULL},
+	{do_rpmb_write_key, -1,
+	 "rpmb write-key", "<rpmb device> <key file>\n"
+					   "Program authentication key which is 32 bytes length and stored\n"
+					   "in the specified file. Also you can specify '-' instead of\n"
+					   "key file path to read the key from stdin.\n"
+					   "NOTE!  This is a one-time programmable (unreversible) change.\n"
+					   "Example:\n"
+					   "  $ echo -n AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHH | \\\n"
+					   "    mmc rpmb write-key /dev/mmcblk0rpmb -",
+	 NULL},
+	{do_rpmb_read_counter, -1,
+	 "rpmb read-counter", "<rpmb device>\n"
+						  "Counter value for the <rpmb device> will be read to stdout.",
+	 NULL},
+	{do_rpmb_read_block, -1,
+	 "rpmb read-block", "<rpmb device> <address> <blocks count> <output file> [key file]\n"
+						"Blocks of 256 bytes will be read from <rpmb device> to output\n"
+						"file or stdout if '-' is specified. If key is specified - read\n"
+						"data will be verified. Instead of regular path you can specify\n"
+						"'-' to read key from stdin.\n"
+						"Example:\n"
+						"  $ echo -n AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHH | \\\n"
+						"    mmc rpmb read-block /dev/mmcblk0rpmb 0x02 2 /tmp/block -\n"
+						"or read two blocks without verification\n"
+						"  $ mmc rpmb read-block /dev/mmcblk0rpmb 0x02 2 /tmp/block",
+	 NULL},
+	{do_rpmb_write_block, -1,
+	 "rpmb write-block", "<rpmb device> <address> <256 byte data file> <key file>\n"
+						 "Block of 256 bytes will be written from data file to\n"
+						 "<rpmb device>. Also you can specify '-' instead of key\n"
+						 "file path or data file to read the data from stdin.\n"
+						 "Example:\n"
+						 "  $ (awk 'BEGIN {while (c++<256) printf \"a\"}' | \\\n"
+						 "    echo -n AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHH) | \\\n"
+						 "    mmc rpmb write-block /dev/mmcblk0rpmb 0x02 - -",
+	 NULL},
+	{do_cache_en, -1,
+	 "cache enable", "<device>\n"
+					 "Enable the eMMC cache feature on <device>.\n"
+					 "NOTE! The cache is an optional feature on devices >= eMMC4.5.",
+	 NULL},
+	{do_cache_dis, -1,
+	 "cache disable", "<device>\n"
+					  "Disable the eMMC cache feature on <device>.\n"
+					  "NOTE! The cache is an optional feature on devices >= eMMC4.5.",
+	 NULL},
+	{do_read_csd, -1,
+	 "csd read", "<device path>\n"
+				 "Print CSD data from <device path>.\n"
+				 "The device path should specify the csd file directory.",
+	 NULL},
+	{do_read_cid, -1,
+	 "cid read", "<device path>\n"
+				 "Print CID data from <device path>.\n"
+				 "The device path should specify the cid file directory.",
+	 NULL},
+	{do_read_scr, -1,
+	 "scr read", "<device path>\n"
+				 "Print SCR data from <device path>.\n"
+				 "The device path should specify the scr file directory.",
+	 NULL},
+	{do_ffu, -2,
+	 "ffu", "<image name> <device>\n"
+			"Run Field Firmware Update with <image name> on <device>.\n",
+	 NULL},
+	{do_erase, -4,
+	 "erase", "<type> "
+			  "<start address> "
+			  "<end address> "
+			  "<device>\n"
+			  "Send Erase CMD38 with specific argument to the <device>\n\n"
+			  "NOTE!: This will delete all user data in the specified region of the device\n"
+			  "<type> must be: legacy | discard | secure-erase | "
+			  "secure-trim1 | secure-trim2 | trim \n",
+	 NULL},
+	{0, 0, 0, 0}};
 
 static char *get_prgname(char *programname)
 {
